@@ -39,5 +39,11 @@ class Carazel
     end
     return @places
   end
+
+  def activities(id, since)
+    results = self.class.get("/users/activities?id=#{id}&since=#{since}")
+    Hashie::Mash.new(results[0]).activities rescue results
+  end
+    
 end
 
