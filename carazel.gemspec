@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
+     "carazel.gemspec",
      "lib/carazel.rb"
   ]
   s.homepage = %q{http://github.com/mattmueller/carazel}
