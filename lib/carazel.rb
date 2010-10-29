@@ -6,6 +6,8 @@ class Carazel
   include HTTParty
   base_uri 'dispatcher.carazel.com'
 
+  #Find and show users
+
   def users
     results = self.class.get('/users')
     Hashie::Mash.new(results).users
@@ -16,34 +18,85 @@ class Carazel
     Hashie::Mash.new(results).users rescue results
   end
 
-  def user_rewards(id)
-    results = self.class.get("/users/rewards?id=#{id}").first
+  #Find and show rewards as well as a given user's rewards
+
+  def rewards(type=nil)
+    if type.nil?
+      results = self.class.get("/rewards/search")
+    else
+      results = self.class.get("/rewards/search?type=type")
+    end
+    results.collect{|r| Hashie::Mash.new(r['reward'])}
+  end
+
+  def reward(id, reward_type)
+    results = self.class.get("/rewards/show?id=#{id}&reward_type=#{reward_type}")
+    Hashie::Mash.new(results.first['reward'])
+  end
+
+  def user_rewards(id, reward_type=nil)
+    query = self.build_query_string([['id=',id],['reward_type=',reward_type]])
+    results = self.class.get("/users/rewards?#{query}").first
     Hashie::Mash.new(results).rewards rescue results
   end
+
+
+  #Find and show places
 
   def place(id)
     results = self.class.get("/places/show?id=#{id}")
     Hashie::Mash.new(results.first['place']) rescue results
   end
 
-  def places(lat,lon,query=nil)
-    if query.nil?
-      results = self.class.get("/places/search?lat=#{lat}&lon=#{lon}")
-    else
-      results = self.class.get("/places/search?lat=#{lat}&lon=#{lon}&query=#{query}")
-    end
-    @places = []
-    results.each do |result|
-      r = Hashie::Mash.new(result['place'])
-      @places << r
-    end
-    return @places
+  def places(lat,lon,term=nil)
+    query = self.build_query_string([['lat=',lat],['lon=',lon],['query=',term]])
+    results = self.class.get("/places/search?#{query}").collect{|r| Hashie::Mash.new(r['place'])}
   end
 
-  def activities(id, since)
-    results = self.class.get("/users/activities?id=#{id}&since=#{since}")
+  #Find and show activities as well as a given user's activities
+
+  def activities(type=nil, limit=nil)
+    if type.nil? && limit.nil?
+      results = self.class.get("/activities/search")
+    else
+      query = self.build_query_string([['type=',type],['limit=',limit]])
+      results = self.class.get("/activities/search?#{query}")
+    end
+    activities = results.collect{|r| Hashie::Mash.new(r['activity'])}
+  end
+
+  def activity(id)
+    results = self.class.get("/activities/show?id=#{id}")
+    Hashie::Mash.new(results.first['activity'])
+  end
+
+  def user_activities(id, since, activity_type=nil)
+    query = self.build_query_string([['id=',id],['since=',since],['activity_type=',activity_type]])
+    results = self.class.get("/users/activities?#{query}")
     Hashie::Mash.new(results[0]).activities rescue results
   end
-    
+
+  #Find and show lbs checkins as well as a given user's lbs checkins
+
+  def checkins(id=nil, since=nil, offset=nil)
+    query = self.build_query_string([['user_id=',id],['since=',since],['offset=',offset]])
+    results = self.class.get("/lbs_checkins/search?#{query}").collect{|r| Hashie::Mash.new(r['lbs_checkin'])}
+  end
+
+  def checkin(id)
+    results = self.class.get("/lbs_checkins/show?id=#{id}")
+    Hashie::Mash.new(results.first['lbs_checkin'])
+  end
+
+  def user_checkins(id, since=nil, offset=nil)
+    query = self.build_query_string([['user_id=',id],['since=',since],['offset=',offset]])
+    results = self.class.get("/lbs_checkins/search?#{query}").collect{|r| Hashie::Mash.new(r['lbs_checkin'])}
+  end
+
+  #Build query string for queries with multiple combinations of values
+
+  def build_query_string(variables)
+    variables.reject{|v| v[1].nil?}.collect{|r| r.join('')}.join('&')
+  end
 end
 
