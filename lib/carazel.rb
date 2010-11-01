@@ -98,12 +98,12 @@ class Carazel
 
   #Update a users info
 
-  def update_user(id, email=nil, mobile_number=nil, zip=nil, delivery_sms=nil, delivery_email=nil)
-    result = self.class.post("/users/update", :body => {:client_key => CLIENT_KEY, :id => id, :email => email, :mobile_number => mobile_number, :zip => zip, :delivery_sms => delivery_sms, :delivery_email => delivery_email})
+  def update_user(id, email=nil, mobile_number=nil, zip=nil, delivery_sms=nil, delivery_email=nil, birth_date=nil)
+    result = self.class.post("/users/update", :body => {:client_key => CLIENT_KEY, :id => id, :email => email, :mobile_number => mobile_number, :zip => zip, :delivery_sms => delivery_sms, :delivery_email => delivery_email, :birth_date => birth_date})
   end
 
-  def create_user(email=nil, mobile_number=nil, zip=nil, delivery_sms=nil, delivery_email=nil)
-    result = self.class.post("/users/create", :body => {:client_key => CLIENT_KEY, :email => email, :mobile_number => mobile_number, :zip => zip,  :delivery_sms => delivery_sms, :delivery_email => delivery_email})
+  def create_user(email=nil, mobile_number=nil, zip=nil, delivery_sms=nil, delivery_email=nil, birth_date=nil)
+    result = self.class.post("/users/create", :body => {:client_key => CLIENT_KEY, :email => email, :mobile_number => mobile_number, :zip => zip,  :delivery_sms => delivery_sms, :delivery_email => delivery_email, :birth_date => birth_date})
   end
 
   #Build query string for queries with multiple combinations of values
