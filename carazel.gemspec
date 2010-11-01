@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{carazel}
-  s.version = "0.2.0"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matt Mueller"]
-  s.date = %q{2010-10-29}
+  s.date = %q{2010-11-01}
   s.description = %q{"Nothing to see here"}
   s.email = %q{muellermr@gmail.com}
   s.extra_rdoc_files = [
