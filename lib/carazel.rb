@@ -2,7 +2,8 @@ require 'rubygems'
 require 'httparty'
 require 'hashie'
 
-CLIENT_KEY = "Your API KEY"
+#Define client key constant in the appropriate place depending on usage.
+#CLIENT_KEY = "Your API KEY"
 
 class Carazel
   include HTTParty
