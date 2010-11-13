@@ -115,6 +115,11 @@ class Carazel
     result = self.class.post("/users/create", :body => {:client_key => CLIENT_KEY, :email => email, :mobile_number => mobile_number, :zip => zip,  :delivery_sms => delivery_sms, :delivery_email => delivery_email, :age => birth_date, :gender => gender})
   end
 
+  #Leaderboards
+  def leaderboard(type, limit)
+    results = self.class.get("/leaderboards/by_#{type}", :body => {:client_key => CLIENT_KEY, :limit => limit}).collect{|r| Hashie::Mash.new(r['user'])}
+  end
+    
   #Build query string for queries with multiple combinations of values
 
   def build_query_string(variables)
